@@ -1,7 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using StarshipRetrieval.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<StarWarsContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddTransient<DbInitializer>();
 
 var app = builder.Build();
 
@@ -14,6 +27,14 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<StarWarsContext>();
+    var dbInitializer = app.Services.GetService<DbInitializer>();
+    dbInitializer.InitializeAsync(dbContext);
+}
+
 app.UseStaticFiles();
 
 app.UseRouting();

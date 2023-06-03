@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Starship Retrieval", "Starship Retrieval\Starship Retrieval.csproj", "{07D7EA0D-4A44-417F-AE6D-A9A9687DC8A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarshipRetrieval", "Starship Retrieval\StarshipRetrieval.csproj", "{07D7EA0D-4A44-417F-AE6D-A9A9687DC8A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

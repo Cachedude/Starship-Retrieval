@@ -1,4 +1,4 @@
-namespace Starship_Retrieval.Models
+namespace StarshipRetrieval.Models
 {
     public class ErrorViewModel
     {

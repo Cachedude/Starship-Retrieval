@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Starship_Retrieval.Models;
+using StarshipRetrieval.Models;
 using System.Diagnostics;
 
-namespace Starship_Retrieval.Controllers
+namespace StarshipRetrieval.Controllers
 {
     public class HomeController : Controller
     {
