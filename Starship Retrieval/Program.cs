@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StarshipRetrieval.Data;
+using StarshipRetrieval.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,13 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddTransient<DbInitializer>();
 
+builder.Services.AddTransient<IStarWarsServices, StarWarsServices>();
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,12 +37,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<StarWarsContext>();
-    var dbInitializer = app.Services.GetService<DbInitializer>();
-    dbInitializer.InitializeAsync(dbContext);
-}
+await SeedDatabaseAsync();
 
 app.UseStaticFiles();
 
@@ -46,3 +50,13 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+async Task SeedDatabaseAsync()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<StarWarsContext>();
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<DbInitializer>();
+        await dbInitializer.Initialize(context);
+    }
+}

@@ -1,11 +1,15 @@
 ﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StarshipRetrieval.Models
 {
     public class StarShip
     {
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public int ID { get; private set; }
+
+        [JsonProperty("shipID")]
+        public int ShipID { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -43,19 +47,25 @@ namespace StarshipRetrieval.Models
         [JsonProperty("MGLT")]
         public string MGLT { get; set; }
 
-        [JsonProperty("starship_class ")]
+        [JsonProperty("starship_class")]
         public string StarshipClass { get; set; }
 
-        [JsonProperty("pilots ")]
-        public ICollection<People> Pilots { get; set; }
+        [JsonProperty("pilots")]
+        public ICollection<string> pilotsStrings { get; set; }
 
-        [JsonProperty("films ")]
-        public ICollection<Film> Films { get; set; }
+        [JsonProperty("pilot_Objects")]
+        public ICollection<People>? Pilots { get; set; }
 
-        [JsonProperty("created ")]
+        [JsonProperty("films")]
+        public ICollection<string> filmsStrings { get; set; }
+
+        [JsonProperty("film_Objects")]
+        public ICollection<Film>? Films { get; set; }
+
+        [JsonProperty("created")]
         public DateTime DateCreated { get; set; }
 
-        [JsonProperty("edited ")]
+        [JsonProperty("edited")]
         public DateTime DateEdited { get; set; }
         public string Url { get; set; }
     }

@@ -2,6 +2,169 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Starship Retrieval</h1>
+@{
+    var starShips = ViewBag.StarShips;
+    var selectedStarShip = ViewBag.StarShips[Model];
+    string FormattedCost = selectedStarShip.CostInCredits;
+    if(int.TryParse(selectedStarShip.CostInCredits, out int costInCredits))
+    {
+        FormattedCost = costInCredits.ToString("N2");
+    }
+    string FormattedCargoCapacity = selectedStarShip.CargoCapacity;
+    if (int.TryParse(selectedStarShip.CargoCapacity, out int CargoCapacity))
+    {
+        FormattedCargoCapacity = CargoCapacity.ToString("N0");
+    }
+    string FormattedMAS = selectedStarShip.MaxAtmospheringSpeed;
+    if (int.TryParse(selectedStarShip.MaxAtmospheringSpeed, out int MaxAtmospheringSpeed))
+    {
+        FormattedMAS = MaxAtmospheringSpeed.ToString("N0");
+    }
+}
+
+ 
+<div class="containter">
+    <div class="row">
+        <div class="col-xs-6 col-md-4" style="margin-bottom:10px">
+            <select id="starShipSelect" class="form-select" aria-label="Starship">
+                <option value="">Select A StarShip...</option>
+                @foreach (var starShip in starShips)
+                {
+                    <option value=@starShip.ID>@starShip.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-10">
+            <div class="row">
+                <div class="col-xs-10 col-md-8" style="font-size:2em; font-weight:bold;">
+                    @selectedStarShip.Name
+                </div>
+                <div class="col-xs-3 col-md-3" style="color:#F37309;" data-toggle="tooltip" data-placement="top" title="The cost of this starship now, in galactic credits.">
+                    Cost: @FormattedCost cr
+                </div>
+                <div class="col-xs-8 col-md-6">
+                    Model: @selectedStarShip.Model
+                </div>
+                <div class="col-xs-8 col-md-6">
+                    Starship Class: @selectedStarShip.StarshipClass
+                </div>
+                <div class="col-xs-12 col-md-10">
+                    Manufacturer: @selectedStarShip.Manufacturer
+                </div>
+
+                <hr style="margin: 10px"/>
+
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The number of personnel needed to run or pilot this starship.">
+                    Crew Count: @selectedStarShip.Crew
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The number of non-essential people this starship can transport.">
+                    Passengers Count: @selectedStarShip.Passengers
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The maximum number of kilograms that this starship can transport.">
+                    Cargo Capacity: @FormattedCargoCapacity kg
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The length of this starship in meters.">
+                    Length: @selectedStarShip.Length m
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The maximum speed of this starship in the atmosphere. 'N/A' if this starship is incapable of atmospheric flight.">
+                    Max Atmosphering Speed: @FormattedMAS mph
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The maximum length of time that this starship can provide consumables for its entire crew without having to resupply">
+                    Consumables: @selectedStarShip.Consumables
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="The Maximum number of Megalights this starship can travel in a standard hour. A 'Megalight' is a standard unit of distance and has never been defined before within the Star Wars universe. This figure is only really useful for measuring the difference in speed of starships. We can assume it is similar to AU, the distance between our Sun (Sol) and Earth.">
+                    Max Number of Megalights: @selectedStarShip.MGLT
+                </div>
+                <div class="col-xs-8 col-md-6" data-toggle="tooltip" data-placement="top" title="the hypermedia URL of this resource.">
+                    Data Url: <a href={ @selectedStarShip.Url }>@selectedStarShip.Url</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-md-6" style="margin-top:10px">
+                    <h4 data-toggle="tooltip" data-placement="top" title="Pilots this starship has been piloted by.">Known Pilots</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Home World</th>
+                            </tr>
+                        </thead>
+                        @if (selectedStarShip.Pilots == null || selectedStarShip.Pilots.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    No Pilots Assigned
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var film in selectedStarShip.Pilots)
+                            {
+                                <tr>
+                                    <td>@film.Name</td>
+                                    <td>@film.HomeWorld.Name</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                <div class="col-xs-8 col-md-6" style="margin-top:10px">
+                    <h4 data-toggle="tooltip" data-placement="top" title="Films that this starship has appeared in.">Films Featured</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order #</th>
+                                <th scope="col">EP #</th>
+                                <th scope="col">Title</th>
+                            </tr>
+                        </thead>
+                        @if (selectedStarShip.Films == null || selectedStarShip.Films.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="2">
+                                    StarShip Has No Films It Is Featured In
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach(var film in selectedStarShip.Films)
+                            {
+                                <tr>
+                                    <td>@film.FilmID</td>
+                                    <td>@film.EpisodeID</td>
+                                    <td>@film.Title</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4 col-md-2" data-toggle="tooltip" data-placement="top" title="The class of this starships hyperdrive.">
+            <div style="text-align:center;">
+                Hyper Drive Rating
+            </div>
+            <div style="text-align:center;">
+                <span style="height: 130px;
+                             width: 130px;
+                             line-height: 130px;
+                             background-color: #7889C3;
+                             border-radius: 50%;
+                             display: inline-block;
+                             text-align:center;
+                             font-size: 2.5em;">
+                    2.0
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="~/js/DropDownList.js"></script>
